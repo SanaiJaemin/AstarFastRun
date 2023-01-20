@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     Vector2 hitpos;
 
 
-    Node Start, CurNode, EndNode; // 시작 , 현재 , 끝나는곳
+    Node StartNode, CurNode, EndNode; // 시작 , 현재 , 끝나는곳
 
     List<Node> OpenList, CloseList; // 오픈리스트 : 검색 가능성이 있는 노드 , 이미 검색이 끝난 지점들의 집합
 
@@ -31,8 +31,10 @@ public class GameManager : MonoBehaviour
             for(int j = 0; j < TileSize; j++)
             {
                 int Lotto = 0;
-                GameObject[,] NodeMap = new GameObject[20, 20];
-                NodeMap[i,j] = Instantiate(Node, new Vector3(i, j, 0), Quaternion.identity);
+                GameObject[,] NodeMap = new GameObject[TileSize, TileSize];
+                NodeMap[i, j] = Instantiate(Node, new Vector3(i, j, 0), Quaternion.identity);
+                NodeMap[i, j].GetComponent<Node>().X = i;
+                NodeMap[i, j].GetComponent<Node>().Y = j;
                 if (Random.Range(0, 6) == Lotto) //벽 생성
                 {
                     NodeMap[i, j].GetComponent<SpriteRenderer>().material.color = Color.black;
@@ -53,9 +55,11 @@ public class GameManager : MonoBehaviour
             
             hit = Physics2D.Raycast(worldPoint, Vector2.zero);
             hitpos = hit.transform.position;
-            GameObject Player = Instantiate(PlayerPrefab, hitpos, Quaternion.identity); 
+            GameObject Player = Instantiate(PlayerPrefab, hitpos, Quaternion.identity);
+            StartNode.X = hit.transform.GetComponent<Node>().X; // 스타트노드 클릭한 친구가 스타드 노트로됨
+            StartNode.X = hit.transform.GetComponent<Node>().Y;
 
-                
+
         }
     }
 
@@ -68,6 +72,7 @@ public class GameManager : MonoBehaviour
 
             hit = Physics2D.Raycast(worldPoint, Vector2.zero);
             hit.transform.gameObject.GetComponent<SpriteRenderer>().material.color = Color.red;
+            
 
 
         }
